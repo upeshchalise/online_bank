@@ -46,3 +46,27 @@ func (a *Account) Withdraw(amount float64) error {
 func (a *Account) Statement() string {
 	return fmt.Sprintf("%v - %v - %v", a.Number, a.Name, a.Balance)
 }
+
+func (a *Account) Transfer(amount float64, destination *Account) error {
+
+	if amount < 0 {
+		return errors.New("deposited amount should be greater than zero")
+	}
+
+	if amount > a.Balance {
+		return errors.New("no enough balance")
+	}
+
+	a.Withdraw(amount)
+	// destination.Balance += amount
+	destination.Deposit(amount)
+	return nil
+}
+
+type Bank interface {
+	Statement() string
+}
+
+func Statement(b Bank) string {
+	return b.Statement()
+}
